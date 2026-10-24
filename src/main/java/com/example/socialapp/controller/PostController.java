@@ -7,44 +7,39 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.socialapp.model.Post;
+import com.example.socialapp.service.PostService;
 
 @RestController
 public class PostController {
+	
+	/*
+	 * The controller depends on PostService.
+	 * final means this field cannot be reassigned
+	 * after it has been initialized.
+	 */
+	private final PostService postService;
+
+	/*
+	 * Spring calls this constructor when it creates
+	 * the PostController bean.
+	 *
+	 * Spring supplies the PostService bean
+	 * as the constructor argument.
+	 */
+	public PostController(PostService postService) {
+	    this.postService = postService;
+	}
+	
 	/*
 	 * Handles HTTP GET requests to /posts.
 	 * Returns a list of Post objects.
 	 */
 	@GetMapping("/posts")
 	public List<Post> getPosts() {
-
 	    /*
-	     * Create an empty list that will hold Post objects.
+	     * Call the getPosts() method on the
+	     * PostService object Spring injected.
 	     */
-	    List<Post> posts = new ArrayList<>();
-	    
-		
-	    /* Create a new Post object using
-	     * the constructor we wrote earlier.
-	     */
-	    Post post1 = new Post(
-	        1L,
-	        "Diana",
-	        "Learning Spring Boot!"
-	    );
-	    
-	    posts.add(post1);
-	    
-	    Post post2 = new Post(
-		        2L,
-		        "Alexa",
-		        "Learning Spring Boot!"
-		    );
-	    
-	    posts.add(post2);
-
-	    /*
-	     * Return the list of posts to Spring.
-	     */
-	    return posts;
+		return postService.getPosts(); //dependency injection
 	}
 }
